@@ -1,0 +1,108 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, type FormEvent } from "react";
+import { Alerta } from "@/components/ui/alerta";
+import { Botao } from "@/components/ui/botao";
+import { Campo } from "@/components/ui/campo";
+import { ApiErro } from "@/lib/api/erros";
+import { errosPorCampo, mensagemDoErro } from "@/lib/api/cliente";
+import { entrar } from "../api";
+import type { Credenciais } from "../tipos";
+import { BotaoGoogle } from "./botao-google";
+import { DivisorOu } from "./divisor-ou";
+
+type ErrosCampos = Partial<Record<keyof Credenciais, string>>;
+
+const EMAIL_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validar({ email, senha }: Credenciais): ErrosCampos {
+  const erros: ErrosCampos = {};
+  if (!email) erros.email = "Informe o seu e-mail.";
+  else if (!EMAIL_VALIDO.test(email)) erros.email = "Informe um e-mail válido.";
+  if (!senha) erros.senha = "Informe a sua senha.";
+  return erros;
+}
+
+export function FormularioLogin({
+  mensagemInicial,
+}: {
+  mensagemInicial: string | null;
+}) {
+  const router = useRouter();
+  const [mensagem, setMensagem] = useState(mensagemInicial);
+  const [errosCampos, setErrosCampos] = useState<ErrosCampos>({});
+  const [enviando, setEnviando] = useState(false);
+
+  async function aoEnviar(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    const dados = new FormData(evento.currentTarget);
+    const credenciais: Credenciais = {
+      email: String(dados.get("email") ?? "").trim(),
+      senha: String(dados.get("senha") ?? ""),
+    };
+
+    const erros = validar(credenciais);
+    setErrosCampos(erros);
+    setMensagem(null);
+    if (Object.keys(erros).length > 0) return;
+
+    setEnviando(true);
+    try {
+      await entrar(credenciais);
+      router.replace("/");
+      router.refresh();
+    } catch (erro) {
+      setEnviando(false);
+      if (erro instanceof ApiErro && erro.detalhes.length > 0) {
+        setErrosCampos(errosPorCampo(erro));
+        return;
+      }
+      setMensagem(mensagemDoErro(erro));
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      {mensagem && <Alerta>{mensagem}</Alerta>}
+
+      <BotaoGoogle />
+      <DivisorOu />
+
+      <form noValidate onSubmit={aoEnviar} className="flex flex-col gap-5">
+        <Campo
+          id="email"
+          name="email"
+          type="email"
+          rotulo="E-mail"
+          placeholder="nome@empresa.com"
+          autoComplete="email"
+          erro={errosCampos.email}
+        />
+        <Campo
+          id="senha"
+          name="senha"
+          type="password"
+          rotulo="Senha"
+          placeholder="Sua senha"
+          autoComplete="current-password"
+          erro={errosCampos.senha}
+        />
+        <Botao type="submit" carregando={enviando} className="mt-3 w-full">
+          {enviando ? "Entrando..." : "Entrar"}
+        </Botao>
+      </form>
+
+      <p className="text-center text-texto/60">
+        Ainda não tem conta?{" "}
+        <Link
+          href="/cadastro"
+          className="font-bold text-texto underline-offset-4 hover:underline"
+        >
+          Criar conta
+        </Link>
+      </p>
+    </div>
+  );
+}
