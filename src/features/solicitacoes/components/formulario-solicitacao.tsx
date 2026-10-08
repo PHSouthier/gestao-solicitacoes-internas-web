@@ -6,37 +6,24 @@ import { useState, type FormEvent } from "react";
 import { Alerta } from "@/components/ui/alerta";
 import { Botao, classesBotao } from "@/components/ui/botao";
 import { AreaTexto, Campo, Selecao } from "@/components/ui/campo";
-import { ApiErro } from "@/lib/api/erros";
 import { errosPorCampo, mensagemDoErro } from "@/lib/api/cliente";
-import { juntarClasses } from "@/lib/classes";
+import { juntarClasses } from "@/lib/utils";
 import { atualizarSolicitacao, criarSolicitacao } from "../api";
-import { PRIORIDADES, ROTULO_PRIORIDADE, ROTULO_STATUS } from "../rotulos";
-import type { Area, DadosSolicitacao, Prioridade, SolicitacaoDetalhe } from "../tipos";
-
-type ErrosCampos = Partial<Record<keyof DadosSolicitacao, string>>;
+import {
+  type Area,
+  type DadosSolicitacao,
+  type Prioridade,
+  PRIORIDADES,
+  ROTULO_PRIORIDADE,
+  ROTULO_STATUS,
+  type SolicitacaoDetalhe,
+} from "../solicitacao";
 
 interface FormularioSolicitacaoProps {
   areas: Area[];
   hoje: string;
   nomePadrao: string;
   solicitacao?: SolicitacaoDetalhe;
-}
-
-function validar(dados: DadosSolicitacao, area: Area | undefined, hoje: string): ErrosCampos {
-  const erros: ErrosCampos = {};
-  if (dados.titulo.length < 3 || dados.titulo.length > 150)
-    erros.titulo = "O título deve ter entre 3 e 150 caracteres.";
-  if (dados.descricao.length < 10 || dados.descricao.length > 5000)
-    erros.descricao = "A descrição deve ter entre 10 e 5000 caracteres.";
-  if (dados.nomeSolicitante.length < 2 || dados.nomeSolicitante.length > 120)
-    erros.nomeSolicitante = "Informe quem está pedindo (2 a 120 caracteres).";
-  if (!area) erros.areaId = "Escolha a área.";
-  if (area?.exigeComplemento && !dados.areaComplemento)
-    erros.areaComplemento = "Informe o nome da área.";
-  if (!dados.dataSolicitacao) erros.dataSolicitacao = "Informe a data.";
-  else if (dados.dataSolicitacao > hoje)
-    erros.dataSolicitacao = "A data não pode ser futura.";
-  return erros;
 }
 
 export function FormularioSolicitacao({
@@ -49,7 +36,7 @@ export function FormularioSolicitacao({
   const editando = Boolean(solicitacao);
   const [areaId, setAreaId] = useState(solicitacao ? String(solicitacao.area.id) : "");
   const [prioridade, setPrioridade] = useState<Prioridade>(solicitacao?.prioridade ?? "MEDIA");
-  const [erros, setErros] = useState<ErrosCampos>({});
+  const [erros, setErros] = useState<Record<string, string>>({});
   const [mensagem, setMensagem] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
 
@@ -71,12 +58,10 @@ export function FormularioSolicitacao({
       dataSolicitacao: texto("dataSolicitacao"),
     };
 
-    const novosErros = validar(dados, areaEscolhida, hoje);
-    setErros(novosErros);
+    setErros({});
     setMensagem(null);
-    if (Object.keys(novosErros).length > 0) return;
-
     setEnviando(true);
+
     try {
       const salva = solicitacao
         ? await atualizarSolicitacao(solicitacao.id, dados)
@@ -85,11 +70,9 @@ export function FormularioSolicitacao({
       router.refresh();
     } catch (erro) {
       setEnviando(false);
-      if (erro instanceof ApiErro && erro.detalhes.length > 0) {
-        setErros(errosPorCampo(erro));
-        return;
-      }
-      setMensagem(mensagemDoErro(erro));
+      const porCampo = errosPorCampo(erro);
+      if (Object.keys(porCampo).length > 0) setErros(porCampo);
+      else setMensagem(mensagemDoErro(erro));
     }
   }
 

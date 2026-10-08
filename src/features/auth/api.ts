@@ -1,5 +1,5 @@
 import { requisicao } from "@/lib/api/cliente";
-import type { Cadastro, Credenciais, Usuario } from "./tipos";
+import type { Cadastro, Credenciais, Usuario } from "./usuario";
 
 export const URL_LOGIN_GOOGLE = "/api/v1/auth/google";
 

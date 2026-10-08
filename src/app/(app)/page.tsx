@@ -3,14 +3,14 @@ import { redirect } from "next/navigation";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { classesBotao } from "@/components/ui/botao";
 import { buscarUsuarioLogado } from "@/features/auth/sessao";
-import { ROTULO_PERFIL } from "@/features/auth/textos";
+import { ROTULO_PERFIL } from "@/features/auth/usuario";
 import { GraficoBarras } from "@/features/dashboard/components/grafico-barras";
 import { Indicadores } from "@/features/dashboard/components/indicadores";
 import { UltimasSolicitacoes } from "@/features/dashboard/components/ultimas-solicitacoes";
 import { buscarResumo } from "@/features/dashboard/servidor";
-import { PRIORIDADES, ROTULO_PRIORIDADE } from "@/features/solicitacoes/rotulos";
+import { PRIORIDADES, ROTULO_PRIORIDADE } from "@/features/solicitacoes/solicitacao";
 import { listarUltimasSolicitacoes } from "@/features/solicitacoes/servidor";
-import { saudacao } from "@/lib/datas";
+import { saudacao } from "@/lib/utils";
 
 export default async function PaginaInicial() {
   const usuario = await buscarUsuarioLogado();

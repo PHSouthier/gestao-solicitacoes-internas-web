@@ -4,7 +4,7 @@ import type {
   SelectHTMLAttributes,
   TextareaHTMLAttributes,
 } from "react";
-import { juntarClasses } from "@/lib/classes";
+import { juntarClasses } from "@/lib/utils";
 
 interface GrupoProps {
   id: string;

@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from "react";
-import { juntarClasses } from "@/lib/classes";
+import { juntarClasses } from "@/lib/utils";
 
 type Variante = "primario" | "contorno" | "perigo" | "discreto";
 type Tamanho = "normal" | "pequeno";

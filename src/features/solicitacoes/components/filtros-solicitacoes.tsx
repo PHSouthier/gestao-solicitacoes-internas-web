@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { juntarClasses } from "@/lib/classes";
+import { juntarClasses } from "@/lib/utils";
 import {
   dataValida,
   type Filtros,
@@ -11,8 +11,13 @@ import {
   paraUrl,
   temFiltroAtivo,
 } from "../filtros";
-import { PRIORIDADES, ROTULO_PRIORIDADE, ROTULO_STATUS, STATUS } from "../rotulos";
-import type { Area } from "../tipos";
+import {
+  type Area,
+  PRIORIDADES,
+  ROTULO_PRIORIDADE,
+  ROTULO_STATUS,
+  STATUS,
+} from "../solicitacao";
 
 const ESPERA_DIGITACAO_MS = 400;
 

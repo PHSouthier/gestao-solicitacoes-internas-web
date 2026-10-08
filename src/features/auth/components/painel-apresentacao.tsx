@@ -1,5 +1,5 @@
 import { Marca } from "@/components/marca";
-import { juntarClasses } from "@/lib/classes";
+import { juntarClasses } from "@/lib/utils";
 
 const ETAPAS = [
   { status: "Aberta", detalhe: "02/10 por Sérgio, do Financeiro" },

@@ -1,7 +1,5 @@
-import { juntarClasses } from "@/lib/classes";
-import { formatarDataHora } from "@/lib/datas";
-import { ROTULO_STATUS } from "../rotulos";
-import type { HistoricoStatus } from "../tipos";
+import { formatarDataHora, juntarClasses } from "@/lib/utils";
+import { type HistoricoStatus, ROTULO_STATUS } from "../solicitacao";
 
 const COR_PONTO = {
   ABERTA: "bg-sky-500",

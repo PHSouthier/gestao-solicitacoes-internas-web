@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BadgeStatus } from "@/features/solicitacoes/components/badges";
-import type { SolicitacaoResumo } from "@/features/solicitacoes/tipos";
-import { formatarData } from "@/lib/datas";
+import type { SolicitacaoResumo } from "@/features/solicitacoes/solicitacao";
+import { formatarData } from "@/lib/utils";
 
 export function UltimasSolicitacoes({
   solicitacoes,

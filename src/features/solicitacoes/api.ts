@@ -1,5 +1,5 @@
 import { requisicao } from "@/lib/api/cliente";
-import type { DadosSolicitacao, Decisao, SolicitacaoDetalhe } from "./tipos";
+import type { DadosSolicitacao, Decisao, SolicitacaoDetalhe } from "./solicitacao";
 
 export function criarSolicitacao(dados: DadosSolicitacao) {
   return requisicao<SolicitacaoDetalhe>("/solicitacoes", {

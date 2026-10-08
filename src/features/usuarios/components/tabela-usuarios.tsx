@@ -4,10 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Alerta } from "@/components/ui/alerta";
 import { Avatar } from "@/components/ui/avatar";
-import { ROTULO_PERFIL } from "@/features/auth/textos";
-import type { Perfil, Usuario } from "@/features/auth/tipos";
+import { type Perfil, ROTULO_PERFIL, type Usuario } from "@/features/auth/usuario";
 import { mensagemDoErro } from "@/lib/api/cliente";
-import { formatarData } from "@/lib/datas";
+import { formatarData } from "@/lib/utils";
 import { alterarPerfil } from "../api";
 
 const PERFIS: Perfil[] = ["SOLICITANTE", "ANALISTA", "ADMINISTRADOR"];

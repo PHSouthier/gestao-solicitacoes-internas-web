@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 import { lerErro } from "@/lib/api/erros";
 import { COOKIE_SESSAO, requisicaoServidor } from "@/lib/api/servidor";
-import type { Usuario } from "./tipos";
+import type { Usuario } from "./usuario";
 
 export const buscarUsuarioLogado = cache(async (): Promise<Usuario | null> => {
   const cookieStore = await cookies();

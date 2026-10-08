@@ -1,4 +1,4 @@
-import type { Perfil, Usuario } from "@/features/auth/tipos";
+import type { Perfil, Usuario } from "@/features/auth/usuario";
 import { requisicao } from "@/lib/api/cliente";
 
 export function alterarPerfil(id: string, perfil: Perfil) {

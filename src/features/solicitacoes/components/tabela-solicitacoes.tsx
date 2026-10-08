@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { juntarClasses } from "@/lib/classes";
-import { formatarData } from "@/lib/datas";
-import type { SolicitacaoResumo } from "../tipos";
+import { formatarData, juntarClasses } from "@/lib/utils";
+import type { SolicitacaoResumo } from "../solicitacao";
 import { BadgePrioridade, BadgeStatus } from "./badges";
 
 const COLUNAS = "grid grid-cols-[minmax(0,2.2fr)_minmax(0,1.3fr)_7rem_7rem_6rem] gap-4";

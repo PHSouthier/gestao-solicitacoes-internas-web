@@ -3,8 +3,7 @@ import { Marca } from "@/components/marca";
 import { AlternarTema } from "@/components/tema/alternar-tema";
 import { Avatar } from "@/components/ui/avatar";
 import { BotaoSair } from "@/features/auth/components/botao-sair";
-import { ROTULO_PERFIL } from "@/features/auth/textos";
-import type { Usuario } from "@/features/auth/tipos";
+import { ROTULO_PERFIL, type Usuario } from "@/features/auth/usuario";
 import { type ItemNavegacao, Navegacao } from "./navegacao";
 
 function itensDoMenu(usuario: Usuario): ItemNavegacao[] {

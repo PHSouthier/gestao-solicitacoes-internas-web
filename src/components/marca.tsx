@@ -1,4 +1,4 @@
-import { juntarClasses } from "@/lib/classes";
+import { juntarClasses } from "@/lib/utils";
 
 export function Marca({ sobreVerde = false }: { sobreVerde?: boolean }) {
   return (

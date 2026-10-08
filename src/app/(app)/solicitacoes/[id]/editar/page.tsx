@@ -7,9 +7,9 @@ import { LinkVoltar } from "@/components/link-voltar";
 import { classesBotao } from "@/components/ui/botao";
 import { buscarUsuarioLogado } from "@/features/auth/sessao";
 import { FormularioSolicitacao } from "@/features/solicitacoes/components/formulario-solicitacao";
-import { podeEditar } from "@/features/solicitacoes/permissoes";
+import { podeEditar } from "@/features/solicitacoes/solicitacao";
 import { buscarSolicitacao, listarAreas } from "@/features/solicitacoes/servidor";
-import { hojeIso } from "@/lib/datas";
+import { hojeIso } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Editar solicitação" };
 

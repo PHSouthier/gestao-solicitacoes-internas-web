@@ -11,9 +11,9 @@ import {
   podeEditar,
   podeExcluir,
   podeIniciarAnalise,
-} from "@/features/solicitacoes/permissoes";
+} from "@/features/solicitacoes/solicitacao";
 import { buscarSolicitacao } from "@/features/solicitacoes/servidor";
-import { formatarData } from "@/lib/datas";
+import { formatarData } from "@/lib/utils";
 
 export async function generateMetadata({
   params,

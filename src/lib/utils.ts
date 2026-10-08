@@ -1,3 +1,9 @@
+export function juntarClasses(
+  ...classes: Array<string | false | null | undefined>
+): string {
+  return classes.filter(Boolean).join(" ");
+}
+
 const FUSO = "America/Sao_Paulo";
 
 export function saudacao(data: Date = new Date()): string {

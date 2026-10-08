@@ -5,7 +5,7 @@ import { LinkVoltar } from "@/components/link-voltar";
 import { buscarUsuarioLogado } from "@/features/auth/sessao";
 import { FormularioSolicitacao } from "@/features/solicitacoes/components/formulario-solicitacao";
 import { listarAreas } from "@/features/solicitacoes/servidor";
-import { hojeIso } from "@/lib/datas";
+import { hojeIso } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Nova solicitação" };
 

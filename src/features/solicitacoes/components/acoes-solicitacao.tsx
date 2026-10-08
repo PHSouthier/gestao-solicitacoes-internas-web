@@ -9,7 +9,7 @@ import { AreaTexto } from "@/components/ui/campo";
 import { Dialogo } from "@/components/ui/dialogo";
 import { errosPorCampo, mensagemDoErro } from "@/lib/api/cliente";
 import { decidir, excluirSolicitacao, iniciarAnalise } from "../api";
-import type { Decisao } from "../tipos";
+import type { Decisao } from "../solicitacao";
 
 interface AcoesSolicitacaoProps {
   id: string;
@@ -74,14 +74,10 @@ export function AcoesSolicitacao({
   async function aoDecidir(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     if (!decisao) return;
-    const comentario = String(new FormData(evento.currentTarget).get("comentario") ?? "").trim();
-    if (comentario.length < 5) {
-      setErroComentario("Escreva um comentário com pelo menos 5 caracteres.");
-      return;
-    }
-
-    setEnviando(true);
+    const comentario = String(new FormData(evento.currentTarget).get("comentario")).trim();
+    setErroComentario(undefined);
     setMensagemDialogo(null);
+    setEnviando(true);
     try {
       await decidir(id, decisao, comentario);
       setDecisao(null);

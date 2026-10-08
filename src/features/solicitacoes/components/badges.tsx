@@ -1,11 +1,12 @@
-import { juntarClasses } from "@/lib/classes";
+import { juntarClasses } from "@/lib/utils";
 import {
   COR_PRIORIDADE,
   COR_STATUS,
+  type Prioridade,
   ROTULO_PRIORIDADE,
   ROTULO_STATUS,
-} from "../rotulos";
-import type { Prioridade, Status } from "../tipos";
+  type Status,
+} from "../solicitacao";
 
 export function BadgeStatus({ status }: { status: Status }) {
   return (

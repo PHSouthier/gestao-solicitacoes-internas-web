@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ROTULO_STATUS, STATUS } from "@/features/solicitacoes/rotulos";
-import type { Status } from "@/features/solicitacoes/tipos";
-import { juntarClasses } from "@/lib/classes";
-import type { ResumoDashboard } from "../tipos";
+import { ROTULO_STATUS, STATUS, type Status } from "@/features/solicitacoes/solicitacao";
+import { juntarClasses } from "@/lib/utils";
+import type { ResumoDashboard } from "../servidor";
 
 const COR_STATUS: Record<Status, string> = {
   ABERTA: "bg-sky-500",

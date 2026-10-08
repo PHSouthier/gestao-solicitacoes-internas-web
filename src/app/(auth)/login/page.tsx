@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { FormularioLogin } from "@/features/auth/components/formulario-login";
 import { buscarUsuarioLogado } from "@/features/auth/sessao";
-import { mensagemErroLogin } from "@/features/auth/textos";
+import { mensagemErroLogin } from "@/features/auth/usuario";
 
 export const metadata: Metadata = { title: "Entrar" };
 

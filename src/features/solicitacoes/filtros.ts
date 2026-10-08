@@ -1,5 +1,4 @@
-import { PRIORIDADES, STATUS } from "./rotulos";
-import type { Prioridade, Status } from "./tipos";
+import { PRIORIDADES, type Prioridade, type Status, STATUS } from "./solicitacao";
 
 export const ORDENACOES = {
   recentes: { rotulo: "Mais recentes", ordenarPor: "dataSolicitacao", ordem: "desc" },

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { buscarDaApi } from "@/lib/api/servidor";
 import { type Filtros, paraConsultaApi } from "./filtros";
-import type { Area, PaginaSolicitacoes, SolicitacaoDetalhe } from "./tipos";
+import type { Area, PaginaSolicitacoes, SolicitacaoDetalhe } from "./solicitacao";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
