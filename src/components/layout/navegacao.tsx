@@ -1,12 +1,16 @@
 "use client";
 
+import { HouseIcon, ListChecksIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { juntarClasses } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+
+const ICONES = { inicio: HouseIcon, solicitacoes: ListChecksIcon, usuarios: UsersIcon };
 
 export interface ItemNavegacao {
   href: string;
   rotulo: string;
+  icone: keyof typeof ICONES;
 }
 
 function estaAtivo(pathname: string, href: string): boolean {
@@ -21,18 +25,20 @@ export function Navegacao({ itens }: { itens: ItemNavegacao[] }) {
     <nav aria-label="Principal" className="-mx-1 flex gap-1 overflow-x-auto px-1">
       {itens.map((item) => {
         const ativo = estaAtivo(pathname, item.href);
+        const Icone = ICONES[item.icone];
         return (
-          <Link
+          <Button
             key={item.href}
-            href={item.href}
-            aria-current={ativo ? "page" : undefined}
-            className={juntarClasses(
-              "flex h-9 items-center rounded-full px-4 text-sm font-bold whitespace-nowrap transition focus-visible:outline-2 focus-visible:outline-texto",
-              ativo ? "bg-texto text-fundo" : "text-texto/70 hover:bg-texto/10 hover:text-texto",
-            )}
+            asChild
+            variant={ativo ? "secondary" : "ghost"}
+            size="sm"
+            className={ativo ? "" : "text-muted-foreground"}
           >
-            {item.rotulo}
-          </Link>
+            <Link href={item.href} aria-current={ativo ? "page" : undefined}>
+              <Icone />
+              {item.rotulo}
+            </Link>
+          </Button>
         );
       })}
     </nav>

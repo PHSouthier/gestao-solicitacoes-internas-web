@@ -1,19 +1,35 @@
+import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 
 export function EstadoVazio({
+  icone: Icone,
   titulo,
   descricao,
   children,
 }: {
+  icone: LucideIcon;
   titulo: string;
   descricao: string;
   children?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-texto/20 px-6 py-16 text-center">
-      <h2 className="text-xl font-bold">{titulo}</h2>
-      <p className="max-w-md text-texto/60">{descricao}</p>
-      {children && <div className="mt-3">{children}</div>}
-    </div>
+    <Empty className="border border-dashed">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <Icone />
+        </EmptyMedia>
+        <EmptyTitle>{titulo}</EmptyTitle>
+        <EmptyDescription>{descricao}</EmptyDescription>
+      </EmptyHeader>
+      {children && <EmptyContent>{children}</EmptyContent>}
+    </Empty>
   );
 }

@@ -1,35 +1,19 @@
-import { juntarClasses } from "@/lib/utils";
+import { ClipboardCheckIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function Marca({ sobreVerde = false }: { sobreVerde?: boolean }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <span
         aria-hidden
-        className={juntarClasses(
-          "grid size-8 place-items-center rounded-full",
-          sobreVerde
-            ? "bg-preto text-verde"
-            : "bg-verde text-preto",
+        className={cn(
+          "grid size-8 place-items-center rounded-lg",
+          sobreVerde ? "bg-preto text-verde" : "bg-primary text-primary-foreground",
         )}
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="size-4"
-        >
-          <path d="M5 12.5 9.5 17 19 7.5" />
-        </svg>
+        <ClipboardCheckIcon className="size-4.5" />
       </span>
-      <span
-        className={juntarClasses(
-          "text-lg font-bold tracking-tight",
-          sobreVerde ? "text-preto" : "text-texto",
-        )}
-      >
+      <span className={cn("text-lg font-bold tracking-tight", sobreVerde && "text-preto")}>
         Solicitações
       </span>
     </span>

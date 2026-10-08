@@ -1,10 +1,11 @@
+import { ArrowLeftIcon, LockIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { EstadoVazio } from "@/components/estado-vazio";
 import { LinkVoltar } from "@/components/link-voltar";
-import { classesBotao } from "@/components/ui/botao";
+import { Button } from "@/components/ui/button";
 import { buscarUsuarioLogado } from "@/features/auth/sessao";
 import { FormularioSolicitacao } from "@/features/solicitacoes/components/formulario-solicitacao";
 import { podeEditar } from "@/features/solicitacoes/solicitacao";
@@ -41,12 +42,16 @@ export default async function PaginaEditarSolicitacao({
         />
       ) : (
         <EstadoVazio
+          icone={LockIcon}
           titulo="Esta solicitação não pode ser editada"
           descricao="Solicitações aprovadas ou rejeitadas ficam travadas. Quem tem perfil Solicitante só edita as que cadastrou."
         >
-          <Link href={voltar} className={classesBotao("contorno")}>
-            Voltar para a solicitação
-          </Link>
+          <Button asChild variant="outline">
+            <Link href={voltar}>
+              <ArrowLeftIcon />
+              Voltar para a solicitação
+            </Link>
+          </Button>
         </EstadoVazio>
       )}
     </div>

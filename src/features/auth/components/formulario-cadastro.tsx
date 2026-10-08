@@ -1,11 +1,12 @@
 "use client";
 
+import { LoaderCircleIcon, UserPlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { Alerta } from "@/components/ui/alerta";
-import { Botao } from "@/components/ui/botao";
-import { Campo } from "@/components/ui/campo";
+import { AlertaErro } from "@/components/alerta-erro";
+import { CampoTexto } from "@/components/campo-texto";
+import { Button } from "@/components/ui/button";
 import { errosPorCampo, mensagemDoErro } from "@/lib/api/cliente";
 import { cadastrar, entrar } from "../api";
 import { BotaoGoogle } from "./botao-google";
@@ -40,22 +41,15 @@ export function FormularioCadastro() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {mensagem && <Alerta>{mensagem}</Alerta>}
+    <div className="flex flex-col gap-5">
+      {mensagem && <AlertaErro>{mensagem}</AlertaErro>}
 
       <BotaoGoogle />
       <DivisorOu />
 
-      <form noValidate onSubmit={aoEnviar} className="flex flex-col gap-5">
-        <Campo
-          id="nome"
-          name="nome"
-          rotulo="Nome"
-          placeholder="Seu nome completo"
-          autoComplete="name"
-          erro={erros.nome}
-        />
-        <Campo
+      <form noValidate onSubmit={aoEnviar} className="flex flex-col gap-4">
+        <CampoTexto id="nome" name="nome" rotulo="Nome" autoComplete="name" erro={erros.nome} />
+        <CampoTexto
           id="email"
           name="email"
           type="email"
@@ -64,24 +58,24 @@ export function FormularioCadastro() {
           autoComplete="email"
           erro={erros.email}
         />
-        <Campo
+        <CampoTexto
           id="senha"
           name="senha"
           type="password"
           rotulo="Senha"
-          placeholder="Crie uma senha"
           autoComplete="new-password"
           dica="Pelo menos 8 caracteres, com letras e números."
           erro={erros.senha}
         />
-        <Botao type="submit" carregando={enviando} className="mt-3 w-full">
+        <Button type="submit" disabled={enviando} className="mt-2 w-full">
+          {enviando ? <LoaderCircleIcon className="animate-spin" /> : <UserPlusIcon />}
           {enviando ? "Criando conta..." : "Criar conta"}
-        </Botao>
+        </Button>
       </form>
 
-      <p className="text-center text-texto/60">
+      <p className="text-center text-sm text-muted-foreground">
         Já tem conta?{" "}
-        <Link href="/login" className="font-bold text-texto underline-offset-4 hover:underline">
+        <Link href="/login" className="font-medium text-foreground underline-offset-4 hover:underline">
           Entrar
         </Link>
       </p>

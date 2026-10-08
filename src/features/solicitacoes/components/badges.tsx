@@ -1,4 +1,15 @@
-import { juntarClasses } from "@/lib/utils";
+import {
+  CircleCheckIcon,
+  CircleDotIcon,
+  CircleXIcon,
+  ClockIcon,
+  type LucideIcon,
+  SignalHighIcon,
+  SignalLowIcon,
+  SignalMediumIcon,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import {
   COR_PRIORIDADE,
   COR_STATUS,
@@ -8,41 +19,39 @@ import {
   type Status,
 } from "../solicitacao";
 
+export const ICONE_STATUS: Record<Status, LucideIcon> = {
+  ABERTA: CircleDotIcon,
+  EM_ANALISE: ClockIcon,
+  APROVADA: CircleCheckIcon,
+  REJEITADA: CircleXIcon,
+};
+
+const ICONE_PRIORIDADE: Record<Prioridade, LucideIcon> = {
+  ALTA: SignalHighIcon,
+  MEDIA: SignalMediumIcon,
+  BAIXA: SignalLowIcon,
+};
+
 export function BadgeStatus({ status }: { status: Status }) {
+  const Icone = ICONE_STATUS[status];
   return (
-    <span
-      className={juntarClasses(
-        "inline-flex items-center rounded-full px-3 py-1 text-xs font-bold whitespace-nowrap",
-        COR_STATUS[status],
-      )}
-    >
+    <Badge className={cn("border-transparent", COR_STATUS[status])}>
+      <Icone />
       {ROTULO_STATUS[status]}
-    </span>
+    </Badge>
   );
 }
 
-const BARRAS: Record<Prioridade, number> = { BAIXA: 1, MEDIA: 2, ALTA: 3 };
-
 export function BadgePrioridade({ prioridade }: { prioridade: Prioridade }) {
+  const Icone = ICONE_PRIORIDADE[prioridade];
   return (
     <span
-      className={juntarClasses(
-        "inline-flex items-center gap-1.5 text-sm font-bold whitespace-nowrap",
+      className={cn(
+        "inline-flex items-center gap-1.5 text-sm font-medium whitespace-nowrap",
         COR_PRIORIDADE[prioridade],
       )}
     >
-      <span aria-hidden className="flex items-end gap-0.5">
-        {[1, 2, 3].map((nivel) => (
-          <span
-            key={nivel}
-            className={juntarClasses(
-              "w-1 rounded-full bg-current",
-              nivel === 1 ? "h-1.5" : nivel === 2 ? "h-2.5" : "h-3.5",
-              nivel > BARRAS[prioridade] && "opacity-25",
-            )}
-          />
-        ))}
-      </span>
+      <Icone aria-hidden className="size-4" />
       {ROTULO_PRIORIDADE[prioridade]}
     </span>
   );

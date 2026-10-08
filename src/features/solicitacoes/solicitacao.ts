@@ -90,7 +90,7 @@ export const COR_STATUS: Record<Status, string> = {
 export const COR_PRIORIDADE: Record<Prioridade, string> = {
   ALTA: "text-red-700 dark:text-red-300",
   MEDIA: "text-amber-700 dark:text-amber-300",
-  BAIXA: "text-texto/60",
+  BAIXA: "text-muted-foreground",
 };
 
 const FINALIZADOS: Status[] = ["APROVADA", "REJEITADA"];

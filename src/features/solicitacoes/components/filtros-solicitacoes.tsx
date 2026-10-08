@@ -1,8 +1,19 @@
 "use client";
 
+import { LoaderCircleIcon, SearchIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { juntarClasses } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   dataValida,
   type Filtros,
@@ -13,46 +24,20 @@ import {
 } from "../filtros";
 import {
   type Area,
+  type Prioridade,
   PRIORIDADES,
   ROTULO_PRIORIDADE,
   ROTULO_STATUS,
+  type Status,
   STATUS,
 } from "../solicitacao";
 
 const ESPERA_DIGITACAO_MS = 400;
 
-const classesControle =
-  "h-10 rounded-full border border-texto/20 bg-fundo px-4 text-sm text-texto outline-none transition hover:border-texto/50 focus:border-texto focus:ring-1 focus:ring-texto";
+const TODAS = "todas";
 
-function alternar<T>(lista: T[], item: T): T[] {
-  return lista.includes(item) ? lista.filter((i) => i !== item) : [...lista, item];
-}
-
-function Chip({
-  ativo,
-  onClick,
-  children,
-}: {
-  ativo: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={ativo}
-      onClick={onClick}
-      className={juntarClasses(
-        "h-8 rounded-full px-3 text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-texto",
-        ativo
-          ? "bg-texto text-fundo"
-          : "bg-texto/10 text-texto hover:bg-texto/20",
-      )}
-    >
-      {children}
-    </button>
-  );
-}
+const classesPilula =
+  "rounded-full px-3 data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground";
 
 export function FiltrosSolicitacoes({
   filtros,
@@ -121,119 +106,131 @@ export function FiltrosSolicitacoes({
     <section aria-label="Filtros" className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <svg
+          <SearchIcon
             aria-hidden
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.2}
-            strokeLinecap="round"
-            className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-texto/50"
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="m20 20-3.5-3.5" />
-          </svg>
-          <input
+            className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <Input
             type="search"
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
             placeholder="Buscar por título, descrição, solicitante ou código"
             aria-label="Buscar solicitações"
             maxLength={100}
-            className={juntarClasses(classesControle, "h-12 w-full pl-12 text-base")}
+            className="h-10 pl-9"
           />
           {carregando && (
-            <span
+            <LoaderCircleIcon
               aria-hidden
-              className="absolute top-1/2 right-4 size-4 -translate-y-1/2 animate-spin rounded-full border-2 border-texto/40 border-t-transparent"
+              className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-muted-foreground"
             />
           )}
         </div>
-        <select
-          aria-label="Ordenar por"
+        <Select
           value={atuais.ordenacao}
-          onChange={(e) => aplicar({ ordenacao: e.target.value as Ordenacao })}
-          className={juntarClasses(classesControle, "h-12")}
+          onValueChange={(valor) => aplicar({ ordenacao: valor as Ordenacao })}
         >
-          {Object.entries(ORDENACOES).map(([valor, { rotulo }]) => (
-            <option key={valor} value={valor}>
-              {rotulo}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger aria-label="Ordenar por" className="h-10! w-full sm:w-48">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(ORDENACOES).map(([valor, { rotulo }]) => (
+              <SelectItem key={valor} value={valor}>
+                {rotulo}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <div role="group" aria-label="Status" className="flex flex-wrap gap-2">
+        <ToggleGroup
+          type="multiple"
+          variant="outline"
+          size="sm"
+          spacing={2}
+          aria-label="Status"
+          value={atuais.status}
+          onValueChange={(valor) => aplicar({ status: valor as Status[] })}
+          className="flex-wrap"
+        >
           {STATUS.map((status) => (
-            <Chip
-              key={status}
-              ativo={atuais.status.includes(status)}
-              onClick={() => aplicar({ status: alternar(atuais.status, status) })}
-            >
+            <ToggleGroupItem key={status} value={status} className={classesPilula}>
               {ROTULO_STATUS[status]}
-            </Chip>
+            </ToggleGroupItem>
           ))}
-        </div>
-        <div role="group" aria-label="Prioridade" className="flex flex-wrap gap-2">
+        </ToggleGroup>
+        <ToggleGroup
+          type="multiple"
+          variant="outline"
+          size="sm"
+          spacing={2}
+          aria-label="Prioridade"
+          value={atuais.prioridade}
+          onValueChange={(valor) => aplicar({ prioridade: valor as Prioridade[] })}
+          className="flex-wrap"
+        >
           {PRIORIDADES.map((prioridade) => (
-            <Chip
-              key={prioridade}
-              ativo={atuais.prioridade.includes(prioridade)}
-              onClick={() =>
-                aplicar({ prioridade: alternar(atuais.prioridade, prioridade) })
-              }
-            >
+            <ToggleGroupItem key={prioridade} value={prioridade} className={classesPilula}>
               {ROTULO_PRIORIDADE[prioridade]}
-            </Chip>
+            </ToggleGroupItem>
           ))}
-        </div>
+        </ToggleGroup>
       </div>
 
       <div className="flex flex-wrap items-end gap-3">
-        <label className="flex flex-col gap-1 text-xs font-bold text-texto/60">
-          Área
-          <select
-            value={atuais.areaId}
-            onChange={(e) => aplicar({ areaId: e.target.value })}
-            className={classesControle}
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="filtro-area" className="text-xs text-muted-foreground">
+            Área
+          </Label>
+          <Select
+            value={atuais.areaId || TODAS}
+            onValueChange={(valor) => aplicar({ areaId: valor === TODAS ? "" : valor })}
           >
-            <option value="">Todas as áreas</option>
-            {areas.map((area) => (
-              <option key={area.id} value={area.id}>
-                {area.nome}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1 text-xs font-bold text-texto/60">
-          De
-          <input
+            <SelectTrigger id="filtro-area" className="w-56">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={TODAS}>Todas as áreas</SelectItem>
+              {areas.map((area) => (
+                <SelectItem key={area.id} value={String(area.id)}>
+                  {area.nome}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="filtro-de" className="text-xs text-muted-foreground">
+            De
+          </Label>
+          <Input
+            id="filtro-de"
             type="date"
             value={datas.dataInicio}
             max={dataValida(datas.dataFim) ? datas.dataFim : undefined}
             onChange={(e) => setDatas((d) => ({ ...d, dataInicio: e.target.value }))}
-            className={classesControle}
+            className="w-40"
           />
-        </label>
-        <label className="flex flex-col gap-1 text-xs font-bold text-texto/60">
-          Até
-          <input
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="filtro-ate" className="text-xs text-muted-foreground">
+            Até
+          </Label>
+          <Input
+            id="filtro-ate"
             type="date"
             value={datas.dataFim}
             min={dataValida(datas.dataInicio) ? datas.dataInicio : undefined}
             onChange={(e) => setDatas((d) => ({ ...d, dataFim: e.target.value }))}
-            className={classesControle}
+            className="w-40"
           />
-        </label>
+        </div>
         {temFiltroAtivo(atuais) && (
-          <button
-            type="button"
-            onClick={limpar}
-            className="h-10 rounded-full px-4 text-sm font-bold text-texto/70 underline-offset-4 hover:text-texto hover:underline"
-          >
+          <Button variant="ghost" onClick={limpar}>
+            <XIcon />
             Limpar filtros
-          </button>
+          </Button>
         )}
       </div>
     </section>

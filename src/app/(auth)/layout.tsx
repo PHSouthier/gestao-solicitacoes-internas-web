@@ -7,12 +7,12 @@ export default function LayoutAuth({ children }: LayoutProps<"/">) {
     <div className="grid min-h-dvh flex-1 lg:grid-cols-[1.1fr_1fr]">
       <PainelApresentacao />
 
-      <main className="relative flex items-center justify-center px-4 py-16 sm:px-8">
+      <main className="relative flex items-center justify-center bg-muted/40 px-4 py-16 sm:px-8">
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
           <AlternarTema />
         </div>
         <div className="w-full max-w-sm">
-          <div className="mb-12 lg:hidden">
+          <div className="mb-8 lg:hidden">
             <Marca />
           </div>
           {children}

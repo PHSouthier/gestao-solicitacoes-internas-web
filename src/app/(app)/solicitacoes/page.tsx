@@ -1,9 +1,10 @@
+import { InboxIcon, PlusIcon, SearchXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { EstadoVazio } from "@/components/estado-vazio";
 import { Paginacao } from "@/components/paginacao";
-import { classesBotao } from "@/components/ui/botao";
+import { Button } from "@/components/ui/button";
 import { FiltrosSolicitacoes } from "@/features/solicitacoes/components/filtros-solicitacoes";
 import { TabelaSolicitacoes } from "@/features/solicitacoes/components/tabela-solicitacoes";
 import { lerFiltros, paraUrl, temFiltroAtivo } from "@/features/solicitacoes/filtros";
@@ -26,9 +27,12 @@ export default async function PaginaSolicitacoes({
           total === 1 ? "1 solicitação encontrada." : `${total} solicitações encontradas.`
         }
         acoes={
-          <Link href="/solicitacoes/nova" className={classesBotao()}>
-            Nova solicitação
-          </Link>
+          <Button asChild>
+            <Link href="/solicitacoes/nova">
+              <PlusIcon />
+              Nova solicitação
+            </Link>
+          </Button>
         }
       />
 
@@ -45,17 +49,22 @@ export default async function PaginaSolicitacoes({
         </>
       ) : temFiltroAtivo(filtros) ? (
         <EstadoVazio
+          icone={SearchXIcon}
           titulo="Nada encontrado"
           descricao="Nenhuma solicitação combina com a busca e os filtros. Tente tirar algum filtro."
         />
       ) : (
         <EstadoVazio
+          icone={InboxIcon}
           titulo="Nenhuma solicitação ainda"
           descricao="Quando alguém cadastrar uma solicitação, ela aparece aqui."
         >
-          <Link href="/solicitacoes/nova" className={classesBotao()}>
-            Cadastrar a primeira
-          </Link>
+          <Button asChild>
+            <Link href="/solicitacoes/nova">
+              <PlusIcon />
+              Cadastrar a primeira
+            </Link>
+          </Button>
         </EstadoVazio>
       )}
     </div>

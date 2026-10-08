@@ -1,40 +1,41 @@
+import { BuildingIcon, PlusIcon, SignalIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
-import { classesBotao } from "@/components/ui/botao";
+import { Button } from "@/components/ui/button";
 import { buscarUsuarioLogado } from "@/features/auth/sessao";
 import { ROTULO_PERFIL } from "@/features/auth/usuario";
 import { GraficoBarras } from "@/features/dashboard/components/grafico-barras";
 import { Indicadores } from "@/features/dashboard/components/indicadores";
 import { UltimasSolicitacoes } from "@/features/dashboard/components/ultimas-solicitacoes";
 import { buscarResumo } from "@/features/dashboard/servidor";
-import { PRIORIDADES, ROTULO_PRIORIDADE } from "@/features/solicitacoes/solicitacao";
 import { listarUltimasSolicitacoes } from "@/features/solicitacoes/servidor";
+import { PRIORIDADES, ROTULO_PRIORIDADE } from "@/features/solicitacoes/solicitacao";
 import { saudacao } from "@/lib/utils";
 
 export default async function PaginaInicial() {
   const usuario = await buscarUsuarioLogado();
   if (!usuario) redirect("/login");
 
-  const [resumo, ultimas] = await Promise.all([
-    buscarResumo(),
-    listarUltimasSolicitacoes(),
-  ]);
+  const [resumo, ultimas] = await Promise.all([buscarResumo(), listarUltimasSolicitacoes()]);
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-8">
       <CabecalhoPagina
         titulo={`${saudacao()}, ${usuario.nome.split(" ")[0]}.`}
         descricao={
           <>
             Você entrou como{" "}
-            <strong className="font-bold text-texto">{ROTULO_PERFIL[usuario.perfil]}</strong>.
+            <strong className="font-semibold text-foreground">{ROTULO_PERFIL[usuario.perfil]}</strong>.
           </>
         }
         acoes={
-          <Link href="/solicitacoes/nova" className={classesBotao()}>
-            Nova solicitação
-          </Link>
+          <Button asChild>
+            <Link href="/solicitacoes/nova">
+              <PlusIcon />
+              Nova solicitação
+            </Link>
+          </Button>
         }
       />
 
@@ -43,6 +44,7 @@ export default async function PaginaInicial() {
       <div className="grid gap-4 lg:grid-cols-2">
         <GraficoBarras
           titulo="Por prioridade"
+          icone={SignalIcon}
           vazio="Sem solicitações para mostrar."
           itens={PRIORIDADES.map((prioridade) => ({
             rotulo: ROTULO_PRIORIDADE[prioridade],
@@ -51,6 +53,7 @@ export default async function PaginaInicial() {
         />
         <GraficoBarras
           titulo="Por área"
+          icone={BuildingIcon}
           vazio="Sem solicitações para mostrar."
           itens={resumo.porArea.map((area) => ({ rotulo: area.nome, valor: area.total }))}
         />

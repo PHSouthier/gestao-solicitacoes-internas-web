@@ -1,10 +1,16 @@
+import { CircleCheckIcon, CircleDotIcon, ClockIcon } from "lucide-react";
 import { Marca } from "@/components/marca";
-import { juntarClasses } from "@/lib/utils";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 const ETAPAS = [
-  { status: "Aberta", detalhe: "02/10 por Sérgio, do Financeiro" },
-  { status: "Em análise", detalhe: "03/10 por Ana, da TI" },
-  { status: "Aprovada", detalhe: "03/10: compra liberada no orçamento do trimestre." },
+  { status: "Aberta", detalhe: "02/10 por Sérgio, do Financeiro", icone: CircleDotIcon },
+  { status: "Em análise", detalhe: "03/10 por Ana, da TI", icone: ClockIcon },
+  {
+    status: "Aprovada",
+    detalhe: "03/10: compra liberada no orçamento do trimestre.",
+    icone: CircleCheckIcon,
+  },
 ];
 
 export function PainelApresentacao() {
@@ -17,51 +23,41 @@ export function PainelApresentacao() {
           Do pedido à decisão, sem nada se perder.
         </h2>
         <p className="mt-6 max-w-md text-lg font-medium">
-          Abra solicitações, acompanhe a análise e registre cada decisão com
-          comentário e data.
+          Abra solicitações, acompanhe a análise e registre cada decisão com comentário e data.
         </p>
       </div>
 
-      <article className="max-w-md rounded-xl bg-fundo p-6 text-texto shadow-2xl shadow-preto/30">
-        <p className="text-sm text-texto/50">SOL-000042</p>
-        <h3 className="mt-1 text-lg font-bold">Notebook para o time de design</h3>
-
-        <ol className="mt-6 flex flex-col gap-5">
-          {ETAPAS.map((etapa, indice) => {
-            const atual = indice === ETAPAS.length - 1;
-            return (
-              <li key={etapa.status} className="relative flex gap-4">
-                {!atual && (
-                  <span
+      <Card className="max-w-md shadow-2xl shadow-preto/30">
+        <CardHeader>
+          <CardDescription>SOL-000042</CardDescription>
+          <CardTitle className="text-lg">Notebook para o time de design</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ol className="flex flex-col gap-4">
+            {ETAPAS.map((etapa, indice) => {
+              const atual = indice === ETAPAS.length - 1;
+              const Icone = etapa.icone;
+              return (
+                <li key={etapa.status} className="flex gap-3">
+                  <Icone
                     aria-hidden
-                    className="absolute top-4 left-[7px] h-[calc(100%+0.25rem)] w-0.5 bg-texto/15"
-                  />
-                )}
-                <span
-                  aria-hidden
-                  className={juntarClasses(
-                    "relative mt-1 size-4 shrink-0 rounded-full",
-                    atual
-                      ? "bg-verde ring-4 ring-verde/25"
-                      : "bg-texto/30",
-                  )}
-                />
-                <div>
-                  <p
-                    className={juntarClasses(
-                      "font-bold",
-                      atual && "text-green-700 dark:text-verde",
+                    className={cn(
+                      "mt-0.5 size-5 shrink-0",
+                      atual ? "text-green-700 dark:text-verde" : "text-muted-foreground",
                     )}
-                  >
-                    {etapa.status}
-                  </p>
-                  <p className="text-sm text-texto/60">{etapa.detalhe}</p>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
-      </article>
+                  />
+                  <div>
+                    <p className={cn("font-semibold", atual && "text-green-700 dark:text-verde")}>
+                      {etapa.status}
+                    </p>
+                    <p className="text-sm text-muted-foreground">{etapa.detalhe}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </CardContent>
+      </Card>
     </section>
   );
 }

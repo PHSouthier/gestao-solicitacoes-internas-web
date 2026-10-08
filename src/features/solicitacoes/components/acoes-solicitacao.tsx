@@ -1,12 +1,31 @@
 "use client";
 
+import { CheckIcon, LoaderCircleIcon, PencilIcon, PlayIcon, Trash2Icon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { Alerta } from "@/components/ui/alerta";
-import { Botao, classesBotao } from "@/components/ui/botao";
-import { AreaTexto } from "@/components/ui/campo";
-import { Dialogo } from "@/components/ui/dialogo";
+import { toast } from "sonner";
+import { AlertaErro } from "@/components/alerta-erro";
+import { CampoAreaTexto } from "@/components/campo-texto";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { errosPorCampo, mensagemDoErro } from "@/lib/api/cliente";
 import { decidir, excluirSolicitacao, iniciarAnalise } from "../api";
 import type { Decisao } from "../solicitacao";
@@ -20,16 +39,21 @@ interface AcoesSolicitacaoProps {
   podeDecidir: boolean;
 }
 
-const TEXTOS_DECISAO: Record<Decisao, { titulo: string; botao: string; descricao: string }> = {
+const TEXTOS_DECISAO: Record<
+  Decisao,
+  { titulo: string; botao: string; descricao: string; sucesso: string }
+> = {
   APROVADA: {
     titulo: "Aprovar solicitação",
     botao: "Aprovar",
     descricao: "Explique o motivo da aprovação. O comentário fica no histórico.",
+    sucesso: "Solicitação aprovada.",
   },
   REJEITADA: {
     titulo: "Rejeitar solicitação",
     botao: "Rejeitar",
     descricao: "Explique o motivo da rejeição. O comentário fica no histórico.",
+    sucesso: "Solicitação rejeitada.",
   },
 };
 
@@ -42,7 +66,6 @@ export function AcoesSolicitacao({
   podeDecidir,
 }: AcoesSolicitacaoProps) {
   const router = useRouter();
-  const [mensagem, setMensagem] = useState<string | null>(null);
   const [iniciando, setIniciando] = useState(false);
   const [decisao, setDecisao] = useState<Decisao | null>(null);
   const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
@@ -53,13 +76,13 @@ export function AcoesSolicitacao({
   if (!podeEditar && !podeExcluir && !podeIniciarAnalise && !podeDecidir) return null;
 
   async function aoIniciarAnalise() {
-    setMensagem(null);
     setIniciando(true);
     try {
       await iniciarAnalise(id);
+      toast.success("Análise iniciada.");
       router.refresh();
     } catch (erro) {
-      setMensagem(mensagemDoErro(erro));
+      toast.error(mensagemDoErro(erro));
     } finally {
       setIniciando(false);
     }
@@ -80,6 +103,7 @@ export function AcoesSolicitacao({
     setEnviando(true);
     try {
       await decidir(id, decisao, comentario);
+      toast.success(TEXTOS_DECISAO[decisao].sucesso);
       setDecisao(null);
       router.refresh();
     } catch (erro) {
@@ -96,6 +120,7 @@ export function AcoesSolicitacao({
     setMensagemDialogo(null);
     try {
       await excluirSolicitacao(id);
+      toast.success(`${codigo} excluída.`);
       router.push("/solicitacoes");
       router.refresh();
     } catch (erro) {
@@ -105,92 +130,108 @@ export function AcoesSolicitacao({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      {mensagem && <Alerta>{mensagem}</Alerta>}
-
-      <div className="flex flex-wrap gap-3">
-        {podeIniciarAnalise && (
-          <Botao variante="contorno" tamanho="pequeno" carregando={iniciando} onClick={aoIniciarAnalise}>
-            Iniciar análise
-          </Botao>
-        )}
-        {podeDecidir && (
-          <>
-            <Botao tamanho="pequeno" onClick={() => abrirDecisao("APROVADA")}>
-              Aprovar
-            </Botao>
-            <Botao variante="perigo" tamanho="pequeno" onClick={() => abrirDecisao("REJEITADA")}>
-              Rejeitar
-            </Botao>
-          </>
-        )}
-        {podeEditar && (
-          <Link href={`/solicitacoes/${id}/editar`} className={classesBotao("contorno", "pequeno")}>
+    <div className="flex flex-wrap gap-2">
+      {podeIniciarAnalise && (
+        <Button variant="outline" disabled={iniciando} onClick={aoIniciarAnalise}>
+          {iniciando ? <LoaderCircleIcon className="animate-spin" /> : <PlayIcon />}
+          Iniciar análise
+        </Button>
+      )}
+      {podeDecidir && (
+        <>
+          <Button onClick={() => abrirDecisao("APROVADA")}>
+            <CheckIcon />
+            Aprovar
+          </Button>
+          <Button variant="destructive" onClick={() => abrirDecisao("REJEITADA")}>
+            <XIcon />
+            Rejeitar
+          </Button>
+        </>
+      )}
+      {podeEditar && (
+        <Button asChild variant="outline">
+          <Link href={`/solicitacoes/${id}/editar`}>
+            <PencilIcon />
             Editar
           </Link>
-        )}
-        {podeExcluir && (
-          <Botao
-            variante="discreto"
-            tamanho="pequeno"
-            onClick={() => {
-              setMensagemDialogo(null);
-              setConfirmandoExclusao(true);
-            }}
-          >
-            Excluir
-          </Botao>
-        )}
-      </div>
+        </Button>
+      )}
+      {podeExcluir && (
+        <Button
+          variant="ghost"
+          className="text-destructive hover:text-destructive"
+          onClick={() => {
+            setMensagemDialogo(null);
+            setConfirmandoExclusao(true);
+          }}
+        >
+          <Trash2Icon />
+          Excluir
+        </Button>
+      )}
 
-      <Dialogo
-        aberto={decisao !== null}
-        aoFechar={() => setDecisao(null)}
-        titulo={decisao ? TEXTOS_DECISAO[decisao].titulo : ""}
-        descricao={decisao ? TEXTOS_DECISAO[decisao].descricao : undefined}
-      >
-        <form noValidate onSubmit={aoDecidir} className="flex flex-col gap-5">
-          {mensagemDialogo && <Alerta>{mensagemDialogo}</Alerta>}
-          <AreaTexto
-            id="comentario"
-            name="comentario"
-            rotulo="Comentário"
-            maxLength={1000}
-            rows={4}
-            autoFocus
-            erro={erroComentario}
-          />
-          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-            <Botao variante="discreto" onClick={() => setDecisao(null)}>
-              Cancelar
-            </Botao>
-            <Botao
-              type="submit"
-              variante={decisao === "REJEITADA" ? "perigo" : "primario"}
-              carregando={enviando}
-            >
-              {decisao ? TEXTOS_DECISAO[decisao].botao : ""}
-            </Botao>
-          </div>
-        </form>
-      </Dialogo>
+      <Dialog open={decisao !== null} onOpenChange={(aberto) => !aberto && setDecisao(null)}>
+        <DialogContent>
+          {decisao && (
+            <form noValidate onSubmit={aoDecidir} className="flex flex-col gap-4">
+              <DialogHeader>
+                <DialogTitle>{TEXTOS_DECISAO[decisao].titulo}</DialogTitle>
+                <DialogDescription>{TEXTOS_DECISAO[decisao].descricao}</DialogDescription>
+              </DialogHeader>
+              {mensagemDialogo && <AlertaErro>{mensagemDialogo}</AlertaErro>}
+              <CampoAreaTexto
+                id="comentario"
+                name="comentario"
+                rotulo="Comentário"
+                maxLength={1000}
+                rows={4}
+                erro={erroComentario}
+              />
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    Cancelar
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  disabled={enviando}
+                  variant={decisao === "REJEITADA" ? "destructive" : "default"}
+                >
+                  {enviando ? (
+                    <LoaderCircleIcon className="animate-spin" />
+                  ) : decisao === "REJEITADA" ? (
+                    <XIcon />
+                  ) : (
+                    <CheckIcon />
+                  )}
+                  {TEXTOS_DECISAO[decisao].botao}
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
 
-      <Dialogo
-        aberto={confirmandoExclusao}
-        aoFechar={() => setConfirmandoExclusao(false)}
-        titulo={`Excluir ${codigo}?`}
-        descricao="A solicitação sai da lista e do painel. Essa ação não pode ser desfeita por aqui."
-      >
-        {mensagemDialogo && <Alerta>{mensagemDialogo}</Alerta>}
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Botao variante="discreto" onClick={() => setConfirmandoExclusao(false)}>
-            Cancelar
-          </Botao>
-          <Botao variante="perigo" carregando={enviando} onClick={aoExcluir}>
-            Excluir solicitação
-          </Botao>
-        </div>
-      </Dialogo>
+      <AlertDialog open={confirmandoExclusao} onOpenChange={setConfirmandoExclusao}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir {codigo}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              A solicitação sai da lista e do painel. Essa ação não pode ser desfeita por aqui.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {mensagemDialogo && <AlertaErro>{mensagemDialogo}</AlertaErro>}
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <Button variant="destructive" disabled={enviando} onClick={aoExcluir}>
+              {enviando ? <LoaderCircleIcon className="animate-spin" /> : <Trash2Icon />}
+              Excluir solicitação
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
