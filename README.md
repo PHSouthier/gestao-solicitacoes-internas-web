@@ -1,5 +1,7 @@
 # Gestão de Solicitações Internas — Web
 
+![Badge Status](http://img.shields.io/static/v1?label=STATUS&message=FINISH&color=GREEN&style=for-the-badge)
+
 Front-end do sistema web de gestão de solicitações internas: login, cadastro e acompanhamento de solicitações, análise e decisão, dashboard e administração de usuários.
 
 > A **documentação principal** (premissas, regras de negócio, decisões técnicas, status da entrega e considerações arquiteturais) está no README da API:
