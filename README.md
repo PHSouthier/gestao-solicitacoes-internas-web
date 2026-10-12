@@ -7,7 +7,7 @@ Front-end do sistema web de gestão de solicitações internas: login, cadastro 
 
 ---
 
-## Tecnologias
+## ✔️ Tecnologias
 
 | Item | Tecnologia |
 |---|---|
@@ -19,58 +19,78 @@ Front-end do sistema web de gestão de solicitações internas: login, cadastro 
 
 ---
 
-## Telas
+## 🔨 Telas
 
-| Tela | Rota | 
+| Tela | Rota |
 |---|---|
-| Login (e-mail e senha, ou Google) | `/login` | 
+| Login (e-mail e senha, ou Google) | `/login` |
 | Cadastro de conta | `/cadastro` |
-| Dashboard: indicadores, gráficos por prioridade e área, últimas solicitações | `/` | 
-| Solicitações: busca, filtros, ordenação e paginação | `/solicitacoes` | 
+| Dashboard: indicadores, gráficos por prioridade e área, últimas solicitações | `/` |
+| Solicitações: busca, filtros, ordenação e paginação | `/solicitacoes` |
 | Nova solicitação | `/solicitacoes/nova` |
-| Detalhe com histórico, análise, decisão e exclusão | `/solicitacoes/[id]` | 
-| Edição | `/solicitacoes/[id]/editar` | 
-| Usuários e perfis | `/usuarios` | 
+| Detalhe com histórico, análise, decisão e exclusão | `/solicitacoes/[id]` |
+| Edição | `/solicitacoes/[id]/editar` |
+| Usuários e perfis | `/usuarios` |
 
 ---
 
-## Como executar
+## 🛠️ Como executar
+
+Para ter uma cópia do front rodando localmente, siga os passos abaixo.
 
 ### Pré-requisitos
 
-- **Docker** e **Docker Compose**.
-- **A API no ar**. Veja [como subir a API](https://github.com/PHSouthier/gestao-solicitacoes-internas-api#como-executar).
-- **Node.js 24** e **npm**: só para rodar fora do Docker ou executar os testes.
+- Git
+- Docker e Docker Compose
+- A API no ar (veja [como executar a API](https://github.com/PHSouthier/gestao-solicitacoes-internas-api#%EF%B8%8F-como-executar))
+- Node.js 24 e npm (só para rodar fora do Docker ou executar os testes)
 
 ### Configuração
 
-As variáveis ficam no arquivo `.env`, criado a partir do `.env.example`:
+1. Suba a API seguindo o README dela. Se ela foi iniciada com `docker compose --profile full up -d --build`, o front já sobe junto e os passos abaixo não são necessários.
 
-```bash
-cp .env.example .env
-```
+2. Clone o repositório **na mesma pasta** da API:
 
-| Variável | Para que serve | Padrão |
-|---|---|---|
-| `API_INTERNAL_URL` | Endereço da API usado pelo servidor do Next | `http://localhost:3001` |
+   ```bash
+   git clone https://github.com/PHSouthier/gestao-solicitacoes-internas-web.git
+   cd gestao-solicitacoes-internas-web
+   ```
 
-O `.env` só é usado **fora do Docker**. No Docker, o valor já vem fixado como `http://api:3001`.
+3. Faça o build e suba o front com o Docker Compose:
 
-### Com Docker
+   ```bash
+   docker compose up -d --build
+   ```
 
-```bash
-cd gestao-solicitacoes-internas-web
-docker compose up -d --build
-```
+   No Docker, o endereço da API já vem fixado como `http://api:3001` e o `.env` não é usado.
 
-### Fora do Docker
+4. Com o container no ar, o front fica disponível em `http://localhost:3000`.
 
-```bash
-npm install
-npm run dev     
-```
+### Rodando fora do Docker
 
-Depois de subir o front, acesse **http://localhost:3000**.
+1. Crie o arquivo `.env` a partir do exemplo:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   | Variável | Para que serve | Padrão |
+   |---|---|---|
+   | `API_INTERNAL_URL` | Endereço da API usado pelo servidor do Next | `http://localhost:3001` |
+
+2. Instale as dependências:
+
+   ```bash
+   npm install
+   ```
+
+3. Rode o front em modo desenvolvimento:
+
+   ```bash
+   npm run dev
+   ```
+
+   O front fica disponível em `http://localhost:3000`.
 
 ### Usuários de teste
 
@@ -94,9 +114,22 @@ Senha **`Senha@123`** para todos:
 
 ---
 
-## Testes
+## 📜 Documentação da API
 
-Testes **ponta a ponta com Playwright** (`e2e/`). 
+O front consome a API REST do repositório [gestao-solicitacoes-internas-api](https://github.com/PHSouthier/gestao-solicitacoes-internas-api), documentada com **Swagger** (OpenAPI).
+
+### 🔹 Acessando a documentação
+
+Com a API rodando, a documentação fica disponível em:
+
+- **Swagger UI**: [http://localhost:3001/api/docs](http://localhost:3001/api/docs)
+- **Especificação OpenAPI (JSON)**: [http://localhost:3001/api/docs-json](http://localhost:3001/api/docs-json)
+
+---
+
+## 📊 Testes
+
+Testes **ponta a ponta com Playwright** (`e2e/`).
 
 Para rodar:
 
@@ -109,3 +142,10 @@ npm run test:e2e
 ```
 
 Os testes usam os usuários do seed e criam solicitações com o título "Teste automático". O relatório fica em `playwright-report/` (`npx playwright show-report`).
+
+---
+
+# 👨‍💻 Autor
+
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/50518425?v=4" width=115><br><sub>Pedro Henrique Southier</sub>](https://github.com/PHSouthier) |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------: |
